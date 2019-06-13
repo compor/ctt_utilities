@@ -4,6 +4,7 @@ found=$( hash clang 2>&1 || hash clang++ 2>&1 > /dev/null )
 [[ $found ]] && echo "clang/clang++ not found" && exit 1
 
 [[ -z ${BOOST_ROOT} ]] && echo "BOOST_ROOT is not set" && exit 1
+#[[ -z ${GTEST_ROOT} ]] && echo "GTEST_ROOT is not set" && exit 1
 
 # preparatory
 
@@ -34,9 +35,7 @@ for i in "${REPOS[@]}"; do
   REPO_URL="https://github.com/compor/${REPO_NAME}.git"
 
   pushd ${REPO_ROOT}
-
   [[ ! -e ${REPO_NAME} ]] && git clone --recursive ${REPO_URL}
-
   popd
 
   #
