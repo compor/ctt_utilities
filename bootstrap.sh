@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-hash clang 2>&1 > /dev/null || ( echo "Could find clang" && exit 1 )
-hash clang++ 2>&1 > /dev/null || ( echo "Could find clang++" && exit 1 )
+found=$( hash clang 2>&1 || hash clang++ 2>&1 > /dev/null )
+[[ $found ]] && echo "clang/clang++ not found" && exit 1
 
 # preparatory
 
