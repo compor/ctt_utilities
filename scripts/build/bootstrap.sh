@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+usage() { echo "Usage: $0 [-p]" 1>&2; exit 1; }
+
+while getopts ":p" opt; do
+  case "${o}" in
+    p)
+      UPDATE_REPO_OPT=1
+      ;;
+    \? )
+      usage
+      ;;
+  esac
+done
+shift $((OPTIND-1))
+
 found=$( hash clang 2>&1 || hash clang++ 2>&1 > /dev/null )
 [[ $found ]] && echo "clang/clang++ not found" && exit 1
 
@@ -30,12 +44,20 @@ REPOS=( "Pedigree" "IteratorRecognition" "Atrox" "Ephippion" )
 for i in "${REPOS[@]}"; do
   REPO_NAME="${i}"
 
-  echo "Seting up: ${REPO_NAME}"
+  echo "Setting up: ${REPO_NAME}"
 
   REPO_URL="https://github.com/compor/${REPO_NAME}.git"
 
   pushd ${REPO_ROOT}
-  [[ ! -e ${REPO_NAME} ]] && git clone --recursive ${REPO_URL}
+
+  if [[ ! -e ${REPO_NAME} ]]; then
+    git clone --recursive ${REPO_URL}
+  elif [[ ${UPDATE_REPO_OPT} -ne 0 ]]; then
+    pushd ${REPO_NAME}
+    git pull
+    popd
+  fi
+
   popd
 
   #
